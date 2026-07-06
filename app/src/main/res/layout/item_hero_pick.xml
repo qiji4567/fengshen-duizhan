@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/hero_pick_card_width"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_hero_pick"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:padding="@dimen/space_xs">
+
+    <ImageView
+        android:id="@+id/ivHeroPortrait"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/hero_pick_card_image_height"
+        android:contentDescription="@string/hero_portrait_desc"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/tvHeroName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xs"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:textColor="@color/text"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvHeroRole"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
+        android:textColor="@color/gold"
+        android:textSize="11sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvHeroSkill"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="2"
+        android:textColor="@color/muted"
+        android:textSize="10sp"
+        android:visibility="gone" />
+</LinearLayout>

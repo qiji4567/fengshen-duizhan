@@ -1,0 +1,22 @@
+# Gradle / Android
+.gradle/
+build/
+app/build/
+local.properties
+*.iml
+.idea/caches/
+.idea/libraries/
+.idea/modules.xml
+.idea/workspace.xml
+.idea/navEditor.xml
+.idea/assetWizardSettings.xml
+.DS_Store
+captures/
+.externalNativeBuild/
+.cxx/
+
+# 签名密钥（勿提交）
+keystore.properties
+keystore/*.jks
+*.jks
+*.keystore

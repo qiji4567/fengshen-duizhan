@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.example.duizhan.view.BattleView
+        android:id="@+id/bvReplay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="#CC111827"
+        android:orientation="vertical"
+        android:padding="@dimen/space_sm">
+
+        <SeekBar
+            android:id="@+id/sbReplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnBack"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/battle_button_height"
+                android:background="@drawable/bg_button"
+                android:text="@string/back"
+                android:textColor="@color/text" />
+
+            <Button
+                android:id="@+id/btnPlayPause"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/battle_button_height"
+                android:layout_marginStart="@dimen/space_xs"
+                android:background="@drawable/bg_button_gold"
+                android:text="@string/replay_play"
+                android:textColor="#111827" />
+
+            <Button
+                android:id="@+id/btnCamBlue"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/battle_button_height"
+                android:layout_marginStart="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:text="@string/replay_cam_blue"
+                android:textColor="@color/text"
+                android:textSize="@dimen/text_xs" />
+
+            <Button
+                android:id="@+id/btnCamRed"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/battle_button_height"
+                android:layout_marginStart="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:text="@string/replay_cam_red"
+                android:textColor="@color/text"
+                android:textSize="@dimen/text_xs" />
+
+            <Button
+                android:id="@+id/btnCamThird"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/battle_button_height"
+                android:layout_marginStart="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:text="@string/replay_cam_third"
+                android:textColor="@color/text"
+                android:textSize="@dimen/text_xs" />
+
+            <Button
+                android:id="@+id/btnCamFree"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/battle_button_height"
+                android:layout_marginStart="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:text="@string/replay_cam_free"
+                android:textColor="@color/text"
+                android:textSize="@dimen/text_xs" />
+
+            <TextView
+                android:id="@+id/tvReplayTime"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_sm"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:textColor="@color/muted"
+                android:textSize="@dimen/text_xs" />
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

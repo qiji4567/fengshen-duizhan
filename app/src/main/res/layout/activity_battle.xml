@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/flBattleRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipChildren="false"
+    android:clipToPadding="false">
+
+    <com.example.duizhan.view.BattleView
+        android:id="@+id/bvBattle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:id="@+id/llTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/space_md"
+        android:paddingTop="@dimen/space_xs"
+        android:paddingEnd="@dimen/space_md"
+        android:paddingBottom="@dimen/space_xs">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvHeroBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/gold"
+                android:textSize="@dimen/text_sm"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvScore"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:text="@string/battle_score_default"
+                android:textColor="@color/text"
+                android:textSize="@dimen/text_xs" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnRecord"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/battle_button_height"
+            android:layout_marginEnd="@dimen/space_xs"
+            android:background="@drawable/bg_button"
+            android:minWidth="0dp"
+            android:paddingStart="@dimen/space_sm"
+            android:paddingEnd="@dimen/space_sm"
+            android:text="@string/record_stop"
+            android:textColor="@color/text"
+            android:textSize="@dimen/text_xs" />
+
+        <Button
+            android:id="@+id/btnSaveReplay"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/battle_button_height"
+            android:layout_marginEnd="@dimen/space_xs"
+            android:background="@drawable/bg_button_gold"
+            android:minWidth="0dp"
+            android:paddingStart="@dimen/space_sm"
+            android:paddingEnd="@dimen/space_sm"
+            android:text="@string/record_save"
+            android:textColor="#111827"
+            android:textSize="@dimen/text_xs" />
+
+        <Button
+            android:id="@+id/btnShop"
+            android:layout_width="@dimen/battle_shop_button_width"
+            android:layout_height="@dimen/battle_button_height"
+            android:layout_marginEnd="@dimen/space_sm"
+            android:background="@drawable/bg_button_gold"
+            android:text="@string/shop"
+            android:textColor="#111827"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnPause"
+            android:layout_width="@dimen/battle_button_width"
+            android:layout_height="@dimen/battle_button_height"
+            android:background="@drawable/bg_button"
+            android:text="@string/pause"
+            android:textColor="@color/text" />
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/svShopPanel"
+        android:layout_width="@dimen/battle_shop_panel_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="@dimen/battle_shop_panel_top"
+        android:layout_marginEnd="@dimen/space_md"
+        android:layout_marginBottom="@dimen/space_md"
+        android:background="@drawable/bg_panel"
+        android:fillViewport="false"
+        android:overScrollMode="ifContentScrolls"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:id="@+id/llShopPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/space_sm">
+
+            <TextView
+                android:id="@+id/tvShopTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/shop_title"
+                android:textColor="@color/gold"
+                android:textSize="@dimen/text_lg"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btnItemLegacyWeapon1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/battle_shop_item_height"
+                android:layout_marginTop="@dimen/space_sm"
+                android:background="@drawable/bg_button"
+                android:visibility="gone"
+                android:textColor="@color/text" />
+
+            <Button
+                android:id="@+id/btnItemLegacyWeapon2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/battle_shop_item_height"
+                android:layout_marginTop="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:visibility="gone"
+                android:textColor="@color/text" />
+
+            <Button
+                android:id="@+id/btnItemLegacyArmor1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/battle_shop_item_height"
+                android:layout_marginTop="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:visibility="gone"
+                android:textColor="@color/text" />
+
+            <Button
+                android:id="@+id/btnItemLegacyArmor2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/battle_shop_item_height"
+                android:layout_marginTop="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:visibility="gone"
+                android:textColor="@color/text" />
+
+            <Button
+                android:id="@+id/btnItemLegacyBoots1"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/battle_shop_item_height"
+                android:layout_marginTop="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:visibility="gone"
+                android:textColor="@color/text" />
+
+            <Button
+                android:id="@+id/btnItemLegacyBoots2"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/battle_shop_item_height"
+                android:layout_marginTop="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:visibility="gone"
+                android:textColor="@color/text" />
+
+            <Button
+                android:id="@+id/btnItemLegacyRelic"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/battle_shop_item_height"
+                android:layout_marginTop="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:visibility="gone"
+                android:textColor="@color/text" />
+
+            <Button
+                android:id="@+id/btnItemLegacyPill"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/battle_shop_item_height"
+                android:layout_marginTop="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:visibility="gone"
+                android:textColor="@color/text" />
+        </LinearLayout>
+    </ScrollView>
+
+    <com.example.duizhan.view.SkillFanPanel
+        android:id="@+id/skillFanPanel"
+        android:layout_width="@dimen/battle_fan_panel_width"
+        android:layout_height="@dimen/battle_fan_panel_height"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/space_sm"
+        android:layout_marginBottom="@dimen/space_sm"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        tools:ignore="ButtonStyle">
+
+        <com.example.duizhan.view.SkillButton
+            android:id="@+id/btnAttack"
+            android:layout_width="@dimen/battle_small_skill_button_size"
+            android:layout_height="@dimen/battle_small_skill_button_size"
+            android:background="@drawable/bg_button_gold"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:padding="0dp"
+            android:text="@string/attack"
+            android:textColor="#111827"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <com.example.duizhan.view.SkillButton
+            android:id="@+id/btnSkillPrimary"
+            android:layout_width="@dimen/battle_small_skill_button_size"
+            android:layout_height="@dimen/battle_small_skill_button_size"
+            android:background="@drawable/bg_button"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:padding="0dp"
+            android:text="@string/skill_primary"
+            android:textColor="@color/text"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <com.example.duizhan.view.SkillButton
+            android:id="@+id/btnSkillSecondary"
+            android:layout_width="@dimen/battle_small_skill_button_size"
+            android:layout_height="@dimen/battle_small_skill_button_size"
+            android:background="@drawable/bg_button"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:padding="0dp"
+            android:text="@string/skill_secondary"
+            android:textColor="@color/text"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <com.example.duizhan.view.SkillButton
+            android:id="@+id/btnSkillUltimate"
+            android:layout_width="@dimen/battle_skill_button_size"
+            android:layout_height="@dimen/battle_skill_button_size"
+            android:background="@drawable/bg_button_gold"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:padding="0dp"
+            android:text="@string/skill_ultimate"
+            android:textColor="#111827"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <com.example.duizhan.view.SkillButton
+            android:id="@+id/btnTalent"
+            android:layout_width="@dimen/battle_talent_button_size"
+            android:layout_height="@dimen/battle_talent_button_size"
+            android:background="@drawable/bg_button"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
+            android:padding="0dp"
+            android:text="@string/skill_talent"
+            android:textColor="@color/text"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+    </com.example.duizhan.view.SkillFanPanel>
+
+    <Button
+        android:id="@+id/btnRecall"
+        android:layout_width="@dimen/battle_recall_button_width"
+        android:layout_height="@dimen/battle_recall_button_height"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_marginBottom="@dimen/battle_recall_bottom_margin"
+        android:background="@drawable/bg_button"
+        android:minHeight="0dp"
+        android:minWidth="0dp"
+        android:text="@string/recall"
+        android:textColor="@color/text"
+        android:textSize="@dimen/text_xs"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvTips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|center_horizontal"
+        android:layout_marginTop="@dimen/battle_tips_top_margin"
+        android:background="@drawable/bg_panel"
+        android:maxWidth="@dimen/battle_tips_max_width"
+        android:padding="@dimen/space_sm"
+        android:text="@string/battle_tips"
+        android:textColor="@color/muted"
+        android:textSize="@dimen/text_xs" />
+</FrameLayout>

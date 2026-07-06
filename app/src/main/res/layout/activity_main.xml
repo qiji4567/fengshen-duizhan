@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/llMainRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/space_md"
+    android:paddingTop="@dimen/space_sm"
+    android:paddingEnd="@dimen/space_md"
+    android:paddingBottom="@dimen/space_sm">
+
+    <LinearLayout
+        android:id="@+id/llMainHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvMainTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/main_title"
+                android:textColor="@color/text"
+                android:textSize="@dimen/main_header_title"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvLastRecord"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:clickable="true"
+                android:ellipsize="end"
+                android:focusable="true"
+                android:maxLines="1"
+                android:text="@string/last_record_loading"
+                android:textColor="@color/muted"
+                android:textSize="@dimen/text_xs" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btnStart"
+            android:layout_width="@dimen/start_button_width"
+            android:layout_height="@dimen/primary_button_height"
+            android:layout_marginStart="@dimen/space_sm"
+            android:background="@drawable/bg_button_gold"
+            android:text="@string/start_battle"
+            android:textColor="#111827"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xs"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/llMainNav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnHistory"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/battle_button_height"
+                android:background="@drawable/bg_button"
+                android:text="@string/nav_history"
+                android:textColor="@color/text"
+                android:textSize="@dimen/text_xs" />
+
+            <Button
+                android:id="@+id/btnStats"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/battle_button_height"
+                android:layout_marginStart="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:text="@string/nav_stats"
+                android:textColor="@color/text"
+                android:textSize="@dimen/text_xs" />
+
+            <Button
+                android:id="@+id/btnGuide"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/battle_button_height"
+                android:layout_marginStart="@dimen/space_xs"
+                android:background="@drawable/bg_button"
+                android:text="@string/nav_guide"
+                android:textColor="@color/text"
+                android:textSize="@dimen/text_xs" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <FrameLayout
+        android:id="@+id/flHeroShowcase"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/space_sm"
+        android:layout_weight="1"
+        android:background="@drawable/bg_panel"
+        android:minHeight="@dimen/hero_showcase_min_height">
+
+        <ImageView
+            android:id="@+id/ivHeroShowcase"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/hero_portrait_desc"
+            android:scaleType="centerCrop" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="#CC0F172A"
+            android:orientation="vertical"
+            android:paddingStart="@dimen/space_md"
+            android:paddingTop="@dimen/space_sm"
+            android:paddingEnd="@dimen/space_md"
+            android:paddingBottom="@dimen/space_sm">
+
+            <TextView
+                android:id="@+id/tvShowcaseSide"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/text_xs"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvShowcaseName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/text"
+                android:textSize="@dimen/text_lg"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvShowcaseMeta"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textColor="@color/gold"
+                android:textSize="@dimen/text_xs" />
+
+            <TextView
+                android:id="@+id/tvShowcaseSkill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="@color/muted"
+                android:textSize="@dimen/text_xs" />
+        </LinearLayout>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/llSidePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_sm"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/btnPickBlue"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/battle_button_height"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button_gold"
+            android:text="@string/pick_side_blue"
+            android:textColor="#111827"
+            android:textSize="@dimen/text_xs"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/btnPickRed"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/battle_button_height"
+            android:layout_marginStart="@dimen/space_xs"
+            android:layout_weight="1"
+            android:background="@drawable/bg_button"
+            android:text="@string/pick_side_red"
+            android:textColor="@color/text"
+            android:textSize="@dimen/text_xs" />
+
+        <Button
+            android:id="@+id/btnRedRandom"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/battle_button_height"
+            android:layout_marginStart="@dimen/space_xs"
+            android:background="@drawable/bg_button"
+            android:minWidth="@dimen/hero_random_button_width"
+            android:text="@string/red_hero_random"
+            android:textColor="@color/text"
+            android:textSize="@dimen/text_xs" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:id="@+id/hsvHeroGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xs"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/llHeroGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" />
+    </HorizontalScrollView>
+
+    <HorizontalScrollView
+        android:id="@+id/hsvHeroList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xs"
+        android:clipToPadding="false"
+        android:paddingBottom="@dimen/space_xs"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/llHeroList"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/space_xs" />
+    </HorizontalScrollView>
+
+    <LinearLayout
+        android:id="@+id/llDifficultyPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_xs"
+        android:background="@drawable/bg_panel"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/space_sm"
+        android:paddingTop="@dimen/space_xs"
+        android:paddingEnd="@dimen/space_sm"
+        android:paddingBottom="@dimen/space_xs">
+
+        <TextView
+            android:id="@+id/tvDifficultyTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/difficulty_title"
+            android:textColor="@color/gold"
+            android:textSize="@dimen/text_xs"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/rgDifficulty"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_sm"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbDifficultyNormal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/difficulty_normal"
+                android:textColor="@color/text"
+                android:textSize="11sp" />
+
+            <RadioButton
+                android:id="@+id/rbDifficultyMedium"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:checked="true"
+                android:text="@string/difficulty_medium"
+                android:textColor="@color/text"
+                android:textSize="11sp" />
+
+            <RadioButton
+                android:id="@+id/rbDifficultyHard"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/difficulty_hard"
+                android:textColor="@color/text"
+                android:textSize="11sp" />
+        </RadioGroup>
+    </LinearLayout>
+</LinearLayout>
