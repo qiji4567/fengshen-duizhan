@@ -21,14 +21,16 @@ public class BattlePrologueActivity extends BaseActivity<ActivityBattlePrologueB
     public static final String EXTRA_RED_HERO = BattleActivity.EXTRA_RED_HERO;
     public static final String EXTRA_DIFFICULTY = BattleActivity.EXTRA_DIFFICULTY;
 
-    private static final long AUTO_ADVANCE_MS = 32000L;
+    private static final long NARRATION_START_TIMEOUT_MS = 12000L;
+    private static final long MAX_PROLOGUE_MS = 90000L;
     private static final long LINE_FADE_MS = 520L;
-    private static final long TTS_WAIT_TIMEOUT_MS = 4500L;
+    private static final long TTS_WAIT_TIMEOUT_MS = 6000L;
 
     private final Handler handler = new Handler(Looper.getMainLooper());
     private GameSpeech speech;
     private boolean launchedBattle;
     private boolean ttsHintShown;
+    private boolean narrationStarted;
 
     @Override
     protected ActivityBattlePrologueBinding inflateBinding(LayoutInflater inflater) {
@@ -51,7 +53,12 @@ public class BattlePrologueActivity extends BaseActivity<ActivityBattlePrologueB
         speech = GameSpeech.get(this);
         scheduleTtsUnavailableHint();
         if (speech != null && speech.tts() != null) {
-            speech.tts().runWhenReady(() -> playPrologueNarration(prologue));
+            speech.tts().runWhenReady(() -> {
+                if (!isFinishing() && !launchedBattle) {
+                    narrationStarted = true;
+                    speech.tts().playNarration(prologue.fullNarration(), this::launchBattleAfterNarration);
+                }
+            });
         }
 
         revealLine(binding.tvPrologueEra, 0L);
@@ -62,31 +69,12 @@ public class BattlePrologueActivity extends BaseActivity<ActivityBattlePrologueB
         revealLine(binding.tvPrologueClosing, LINE_FADE_MS * 5L);
 
         binding.flPrologueRoot.setOnClickListener(v -> launchBattle());
-        handler.postDelayed(this::launchBattle, AUTO_ADVANCE_MS);
-    }
-
-    private void playPrologueNarration(BattlePrologue prologue) {
-        String[] lines = {
-                prologue.eraTitle,
-                prologue.matchupLine,
-                prologue.blueLine,
-                prologue.redLine,
-                prologue.themeLine,
-                prologue.closingLine
-        };
-        speakPrologueLine(lines, 0);
-    }
-
-    private void speakPrologueLine(String[] lines, int index) {
-        if (index >= lines.length || isFinishing() || speech == null || speech.tts() == null) {
-            return;
-        }
-        final int nextIndex = index + 1;
-        speech.tts().playNarrationLine(lines[index] + "。", index == 0, () -> {
-            if (!isFinishing() && nextIndex < lines.length) {
-                handler.postDelayed(() -> speakPrologueLine(lines, nextIndex), 180L);
+        handler.postDelayed(() -> {
+            if (!narrationStarted) {
+                launchBattle();
             }
-        });
+        }, NARRATION_START_TIMEOUT_MS);
+        handler.postDelayed(this::launchBattle, MAX_PROLOGUE_MS);
     }
 
     private void scheduleTtsUnavailableHint() {
@@ -99,8 +87,13 @@ public class BattlePrologueActivity extends BaseActivity<ActivityBattlePrologueB
             }
             ttsHintShown = true;
             Toast.makeText(this, R.string.tts_unavailable_hint, Toast.LENGTH_LONG).show();
-            speech.openTtsInstall(this);
         }, TTS_WAIT_TIMEOUT_MS);
+    }
+
+    private void launchBattleAfterNarration() {
+        if (!launchedBattle) {
+            handler.postDelayed(this::launchBattle, 650L);
+        }
     }
 
     private void revealLine(TextView view, long delayMs) {
@@ -126,6 +119,7 @@ public class BattlePrologueActivity extends BaseActivity<ActivityBattlePrologueB
         intent.putExtra(EXTRA_BLUE_HERO, getIntent().getStringExtra(EXTRA_BLUE_HERO));
         intent.putExtra(EXTRA_RED_HERO, getIntent().getStringExtra(EXTRA_RED_HERO));
         intent.putExtra(EXTRA_DIFFICULTY, getIntent().getStringExtra(EXTRA_DIFFICULTY));
+        intent.putExtra(BattleActivity.EXTRA_SKIP_ENTRY_VOICE, true);
         startActivity(intent);
         finish();
         overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);

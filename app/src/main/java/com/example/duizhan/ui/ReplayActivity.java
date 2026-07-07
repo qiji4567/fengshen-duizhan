@@ -86,7 +86,8 @@ public class ReplayActivity extends Activity {
 
     private void renderSession(ReplaySession session) {
         if (session == null || session.record == null || session.replayPlayer == null) {
-            finish();
+            timeView.setText("回放文件缺失或读取失败");
+            playing = false;
             return;
         }
         record = session.record;

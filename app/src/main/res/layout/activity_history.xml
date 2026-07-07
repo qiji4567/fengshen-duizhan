@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg"
     android:orientation="vertical"
-    android:padding="@dimen/space_md">
+    android:padding="@dimen/space_md"
+    tools:context=".ui.HistoryActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -16,8 +19,10 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/battle_button_height"
             android:background="@drawable/bg_button"
+            android:minWidth="84dp"
             android:text="@string/back"
-            android:textColor="@color/text" />
+            android:textColor="@color/text"
+            tools:ignore="TouchTargetSizeCheck" />
 
         <TextView
             android:id="@+id/tvTitle"
@@ -28,19 +33,33 @@
             android:text="@string/history_title"
             android:textColor="@color/gold"
             android:textSize="@dimen/text_xl"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:text="历史战斗（3条）" />
+
+        <TextView
+            android:id="@+id/tvHistoryMeta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/muted"
+            android:textSize="@dimen/text_xs"
+            tools:text="最近 07-06 20:30" />
     </LinearLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginTop="@dimen/space_sm"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true">
 
         <LinearLayout
             android:id="@+id/llHistoryList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical">
+
+            <include layout="@layout/history_preview_content" />
+        </LinearLayout>
     </ScrollView>
 </LinearLayout>

@@ -131,6 +131,10 @@ public class HeroLineAnnouncer implements TextToSpeech.OnInitListener {
         speak(text, TextToSpeech.QUEUE_FLUSH, null);
     }
 
+    public void playNarration(String text, Runnable onDone) {
+        speak(text, TextToSpeech.QUEUE_FLUSH, onDone);
+    }
+
     public void playNarrationLine(String text, boolean firstLine) {
         speak(text, firstLine ? TextToSpeech.QUEUE_FLUSH : TextToSpeech.QUEUE_ADD, null);
     }

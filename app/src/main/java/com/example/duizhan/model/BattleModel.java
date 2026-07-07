@@ -29,6 +29,7 @@ public class BattleModel implements GameListener {
 
     private final BattleRepository repository;
     private final ReplayRecorder replayRecorder = new ReplayRecorder();
+    private final ReplayRecorder autoReplayRecorder = new ReplayRecorder();
     private final Context context;
     private Callback callback;
     private GameEngine engine;
@@ -51,6 +52,7 @@ public class BattleModel implements GameListener {
     public void start() {
         saved = false;
         replayRecorder.reset();
+        autoReplayRecorder.reset();
         if (engine != null) {
             engine.start();
         }
@@ -147,7 +149,7 @@ public class BattleModel implements GameListener {
             notifyReplaySave(callback, -1L);
             return;
         }
-        replayRecorder.captureSnapshot(engine.snapshot());
+        captureFinalSnapshot(replayRecorder);
         if (replayRecorder.frameCount() == 0) {
             notifyReplaySave(callback, -1L);
             return;
@@ -171,6 +173,7 @@ public class BattleModel implements GameListener {
         if (replayRecorder.isRecording()) {
             replayRecorder.onSnapshot(snapshot);
         }
+        autoReplayRecorder.onSnapshot(snapshot);
         if (callback != null) {
             callback.onGameChanged(snapshot);
         }
@@ -180,10 +183,8 @@ public class BattleModel implements GameListener {
     public void onGameFinished(Team winner, long durationMs, BattleSummary summary) {
         if (!saved) {
             saved = true;
-            if (engine != null) {
-                replayRecorder.captureSnapshot(engine.snapshot());
-            }
-            repository.saveRecordAsync(summary, durationMs, replayRecorder, id ->
+            captureFinalSnapshot(autoReplayRecorder);
+            repository.saveRecordAsync(summary, durationMs, autoReplayRecorder, id ->
                     com.example.duizhan.util.AppAsync.runOnMain(() -> {
                         if (callback != null) {
                             callback.onGameFinished(winner, durationMs, id);
@@ -193,6 +194,12 @@ public class BattleModel implements GameListener {
         }
         if (callback != null) {
             callback.onGameFinished(winner, durationMs, -1L);
+        }
+    }
+
+    private void captureFinalSnapshot(ReplayRecorder recorder) {
+        if (engine != null) {
+            recorder.captureSnapshot(engine.snapshot());
         }
     }
 }

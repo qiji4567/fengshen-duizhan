@@ -8,6 +8,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -58,6 +63,35 @@ public final class ReplayStorage {
         }
     }
 
+    public static boolean writeReplayFile(Context context, long recordId, ReplayRecorder replayRecorder) {
+        if (context == null || recordId <= 0L || replayRecorder == null || replayRecorder.frameCount() == 0) {
+            return false;
+        }
+        File file = replayFile(context, recordId);
+        File tempFile = new File(file.getParentFile(), recordId + ".replay.tmp");
+        File parent = file.getParentFile();
+        if (parent != null && !parent.exists() && !parent.mkdirs()) {
+            return false;
+        }
+        try (FileOutputStream output = new FileOutputStream(tempFile);
+             GZIPOutputStream gzip = new GZIPOutputStream(output);
+             Writer writer = new OutputStreamWriter(gzip, StandardCharsets.UTF_8)) {
+            replayRecorder.writeForPersistence(writer);
+        } catch (IOException | RuntimeException exception) {
+            tempFile.delete();
+            return false;
+        }
+        if (file.exists() && !file.delete()) {
+            tempFile.delete();
+            return false;
+        }
+        if (!tempFile.renameTo(file)) {
+            tempFile.delete();
+            return false;
+        }
+        return true;
+    }
+
     static byte[] readFile(Context context, long recordId) {
         if (context == null || recordId <= 0L) {
             return null;
@@ -77,6 +111,77 @@ public final class ReplayStorage {
         } catch (IOException ignored) {
             return null;
         }
+    }
+
+    public static int countStoredFrames(Context context, String storedReplay) {
+        if (storedReplay == null || storedReplay.length() == 0) {
+            return 0;
+        }
+        if (storedReplay.startsWith(FILE_PREFIX)) {
+            try {
+                long recordId = Long.parseLong(storedReplay.substring(FILE_PREFIX.length()));
+                File file = replayFile(context, recordId);
+                if (!file.isFile()) {
+                    return 0;
+                }
+                try (FileInputStream input = new FileInputStream(file);
+                     GZIPInputStream gzip = new GZIPInputStream(input);
+                     Reader reader = new InputStreamReader(gzip, StandardCharsets.UTF_8)) {
+                    return countFramesInJsonStream(reader);
+                }
+            } catch (IOException | NumberFormatException ignored) {
+                return 0;
+            }
+        }
+        if (storedReplay.startsWith(GZIP_PREFIX)) {
+            try {
+                byte[] compressed = android.util.Base64.decode(
+                        storedReplay.substring(GZIP_PREFIX.length()), android.util.Base64.NO_WRAP);
+                try (InputStream input = new ByteArrayInputStream(compressed);
+                     GZIPInputStream gzip = new GZIPInputStream(input);
+                     Reader reader = new InputStreamReader(gzip, StandardCharsets.UTF_8)) {
+                    return countFramesInJsonStream(reader);
+                }
+            } catch (IOException | IllegalArgumentException ignored) {
+                return 0;
+            }
+        }
+        return countFrameMarkers(storedReplay);
+    }
+
+    private static int countFramesInJsonStream(Reader reader) throws IOException {
+        char[] buffer = new char[8192];
+        char[] marker = {'"', 't', '"', ':'};
+        int matched = 0;
+        int total = 0;
+        int read;
+        while ((read = reader.read(buffer)) != -1) {
+            for (int i = 0; i < read; i++) {
+                char c = buffer[i];
+                if (c == marker[matched]) {
+                    matched++;
+                    if (matched == marker.length) {
+                        total++;
+                        matched = 0;
+                    }
+                } else {
+                    matched = c == marker[0] ? 1 : 0;
+                }
+            }
+        }
+        return total;
+    }
+
+    private static int countFrameMarkers(String text) {
+        if (text == null || text.length() == 0) {
+            return 0;
+        }
+        int count = 0;
+        int index = -1;
+        while ((index = text.indexOf("\"t\":", index + 1)) >= 0) {
+            count++;
+        }
+        return count;
     }
 
     public static String decodeStored(Context context, String storedReplay) {

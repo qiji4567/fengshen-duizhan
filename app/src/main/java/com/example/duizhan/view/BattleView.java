@@ -1399,24 +1399,24 @@ public class BattleView extends View {
                 continue;
             }
             float sx = entity.x * scale + offsetX;
-            float sy = entity.y * scale + offsetY - entity.radius * scale - dp(34f);
+            float sy = entity.y * scale + offsetY - entity.radius * scale - dp(46f);
             String label = heroHudLabel(entity);
             if (!entity.alive) {
                 label = heroDisplayName(entity) + " · "
                         + UiTextUtils.respawn(getContext(), entity.respawnTimer);
-                sy -= dp(6f);
+                sy -= dp(8f);
             }
-            paint.setTextSize(sp(13f));
+            paint.setTextSize(sp(15f));
             paint.setFakeBoldText(true);
             float textWidth = paint.measureText(label);
-            float padH = dp(7f);
-            float padTop = dp(13f);
-            float padBottom = dp(5f);
-            paint.setColor(Color.argb(235, 15, 23, 42));
+            float padH = dp(9f);
+            float padTop = dp(15f);
+            float padBottom = dp(6f);
+            paint.setColor(Color.argb(245, 7, 12, 24));
             canvas.drawRoundRect(sx - textWidth / 2f - padH, sy - padTop,
-                    sx + textWidth / 2f + padH, sy + padBottom, dp(5f), dp(5f), paint);
+                    sx + textWidth / 2f + padH, sy + padBottom, dp(6f), dp(6f), paint);
             int nameColor = entity.team == Team.BLUE
-                    ? Color.rgb(147, 197, 253) : Color.rgb(252, 165, 165);
+                    ? Color.rgb(191, 219, 254) : Color.rgb(254, 202, 202);
             paint.setColor(entity.alive ? nameColor : Color.rgb(203, 213, 225));
             canvas.drawText(label, sx, sy, paint);
             paint.setFakeBoldText(false);

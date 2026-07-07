@@ -4,6 +4,11 @@ import com.example.duizhan.game.GameSnapshot;
 import com.example.duizhan.game.Team;
 import com.example.duizhan.game.UnitKind;
 
+import org.json.JSONException;
+
+import java.io.IOException;
+import java.io.Writer;
+
 public final class ReplayRecorder {
     private static final int MAX_FRAMES = 7200;
     private static final int SAMPLE_INTERVAL_MS = 50;
@@ -88,36 +93,43 @@ public final class ReplayRecorder {
         return data.toJsonString();
     }
 
-    /** Compact snapshot for durable storage after battle ends. */
+    /** Full replay export. This keeps every sampled frame; do not downsample persisted battles. */
     public synchronized String exportForPersistence() {
-        return buildCompactCopy().toJsonString();
+        return data.toJsonString();
     }
 
-    private ReplayData buildCompactCopy() {
+    /** Streams the full replay without building one large JSON object in memory. */
+    public synchronized void writeForPersistence(Writer writer) throws IOException {
+        if (writer == null) {
+            return;
+        }
+        writer.write("{\"version\":");
+        writer.write(String.valueOf(data.version));
+        writer.write(",\"intervalMs\":");
+        writer.write(String.valueOf(data.intervalMs));
+        writer.write(",\"frames\":[");
+        for (int index = 0; index < data.frames.size(); index++) {
+            if (index > 0) {
+                writer.write(',');
+            }
+            try {
+                writer.write(data.frames.get(index).toJson().toString());
+            } catch (JSONException exception) {
+                throw new IOException("Replay frame JSON failed at index " + index, exception);
+            }
+        }
+        writer.write("]}");
+    }
+
+    /** Last-resort replay payload when a long battle is too large to compact in memory. */
+    public synchronized String exportFinalSnapshotOnly() {
         ReplayData compact = new ReplayData();
         compact.version = data.version;
         compact.intervalMs = data.intervalMs;
-        if (data.frames.isEmpty()) {
-            return compact;
+        if (!data.frames.isEmpty()) {
+            compact.frames.add(copyFrameForPersist(data.frames.get(data.frames.size() - 1), true));
         }
-        int maxFrames = 3600;
-        int step = 1;
-        if (data.frames.size() > maxFrames) {
-            step = (int) Math.ceil(data.frames.size() / (double) maxFrames);
-            compact.intervalMs = data.intervalMs * step;
-        }
-        for (int index = 0; index < data.frames.size(); index += step) {
-            boolean keepVisuals = index + step >= data.frames.size();
-            compact.frames.add(copyFrameForPersist(data.frames.get(index), keepVisuals));
-        }
-        ReplayFrame lastSource = data.frames.get(data.frames.size() - 1);
-        ReplayFrame lastCopied = compact.frames.isEmpty()
-                ? null
-                : compact.frames.get(compact.frames.size() - 1);
-        if (lastCopied == null || lastCopied.timeMs != lastSource.timeMs) {
-            compact.frames.add(copyFrameForPersist(lastSource, true));
-        }
-        return compact;
+        return compact.toJsonString();
     }
 
     private ReplayFrame copyFrameForPersist(ReplayFrame source, boolean keepVisuals) {

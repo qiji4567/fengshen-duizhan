@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg"
     android:orientation="vertical"
     android:padding="@dimen/space_md">
 
@@ -16,6 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/battle_button_height"
             android:background="@drawable/bg_button"
+            android:minWidth="84dp"
             android:text="@string/back"
             android:textColor="@color/text" />
 
@@ -34,6 +36,7 @@
             android:layout_width="wrap_content"
             android:layout_height="@dimen/battle_button_height"
             android:background="@drawable/bg_button_gold"
+            android:minWidth="98dp"
             android:text="@string/detail_replay"
             android:textColor="#111827"
             android:textStyle="bold" />
@@ -45,14 +48,10 @@
         android:layout_marginTop="@dimen/space_sm"
         android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/tvDetailContent"
+        <LinearLayout
+            android:id="@+id/llDetailContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_panel"
-            android:lineSpacingExtra="4dp"
-            android:padding="@dimen/space_md"
-            android:textColor="@color/text"
-            android:textSize="@dimen/text_sm" />
+            android:orientation="vertical" />
     </ScrollView>
 </LinearLayout>

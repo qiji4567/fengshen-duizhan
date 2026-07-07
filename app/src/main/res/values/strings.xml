@@ -26,8 +26,8 @@
     <string name="hero_portrait_desc">英雄头像</string>
     <string name="hero_detail_format">蓝方：%1$s  对阵  红方：%2$s。地图有草丛隐身、断墙翻越、溪流与水泊；孙悟空二技能可七十二变化身敌方英雄。</string>
     <string name="start_battle">开始对战</string>
-    <string name="prologue_skip_hint">点击任意处跳过 · 约 32 秒后进入战场</string>
-    <string name="tts_unavailable_hint">未检测到中文语音引擎，正在打开语音包安装页；也可到 系统设置 → 语言和输入法 → 文字转语音 安装中文语音</string>
+    <string name="prologue_skip_hint">点击任意处跳过 · 独白说完后进入战场</string>
+    <string name="tts_unavailable_hint">未检测到可用中文语音引擎；可到 系统设置 → 语言和输入法 → 文字转语音 安装中文语音</string>
     <string name="difficulty_title">电脑难度</string>
     <string name="difficulty_normal">普通</string>
     <string name="difficulty_medium">中等</string>
@@ -71,6 +71,7 @@
     <string name="record_save_error">录像保存失败，请重试</string>
     <string name="record_saved_title">录像已保存</string>
     <string name="record_saved_message">录像 #%1$d 已写入本地，可在「历史记录」查看并回放。</string>
+    <string name="record_auto_saved_message">录像已自动保存 #%1$d，可在「历史记录」查看并回放。</string>
     <string name="record_status_format">录像 %1$s · %2$d帧</string>
     <string name="record_on">录制中</string>
     <string name="record_off">已暂停</string>
@@ -103,7 +104,7 @@
     <string name="game_build_apply_success">已按推荐替换 %1$d 件装备</string>
     <string name="battle_tips">左下摇杆移动；双指捏合缩放视野；点小地图开大地图并拖拽定位；十二处野怪营地可获增益；每位英雄拥有独立二段与大招</string>
     <string name="battle_finish_title_format">%1$s胜利</string>
-    <string name="battle_finish_message_format">用时：%1$d 秒\n战绩已保存。可点「查看战绩」看详情和回放，或回主页点顶部最近战绩 / 「历史战绩」。</string>
+    <string name="battle_finish_message_format">用时：%1$d 秒</string>
     <string name="battle_restart">再来一局</string>
     <string name="view_battle_record">查看战绩</string>
     <string name="game_battle_start">欢迎进入封神峡谷</string>

@@ -40,6 +40,7 @@ public class BattleActivity extends BaseMvpActivity<ActivityBattleBinding, Battl
     public static final String EXTRA_BLUE_HERO = "extra_blue_hero";
     public static final String EXTRA_RED_HERO = "extra_red_hero";
     public static final String EXTRA_DIFFICULTY = "extra_difficulty";
+    public static final String EXTRA_SKIP_ENTRY_VOICE = "extra_skip_entry_voice";
 
     private boolean finishDialogShown;
     private boolean battleStarted;
@@ -49,6 +50,7 @@ public class BattleActivity extends BaseMvpActivity<ActivityBattleBinding, Battl
     private LinearLayout shopListContainer;
     private String lastBattleToastMessage = "";
     private HeroType blueHero;
+    private boolean skipEntryVoice;
     private int currentGold;
     private EquipmentSlot activeShopSlot;
     private int lastRenderedGold = -1;
@@ -86,6 +88,7 @@ public class BattleActivity extends BaseMvpActivity<ActivityBattleBinding, Battl
         HeroType redHero = readHero(EXTRA_RED_HERO, HeroType.ERLANG_SHEN);
         BattleDifficulty difficulty = readDifficulty();
         this.blueHero = blueHero;
+        skipEntryVoice = getIntent().getBooleanExtra(EXTRA_SKIP_ENTRY_VOICE, false);
         presenter.setBattleSetup(blueHero, redHero, difficulty);
         binding.bvBattle.setActionListener(new BattleActionListener());
         binding.bvBattle.requestFocus();
@@ -117,7 +120,11 @@ public class BattleActivity extends BaseMvpActivity<ActivityBattleBinding, Battl
         setupShop();
         binding.tvHeroBanner.setText(getString(R.string.battle_hero_banner_format, 1, blueHero.label));
         binding.tvTips.setVisibility(View.GONE);
-        binding.bvBattle.postDelayed(this::playBattleEntryVoices, 350);
+        if (skipEntryVoice) {
+            binding.bvBattle.postDelayed(this::startBattleAfterEntryVoice, 250);
+        } else {
+            binding.bvBattle.postDelayed(this::playBattleEntryVoices, 350);
+        }
         UiFeedbackHelper.bindClick(binding.btnPause, () -> {
             presenter.togglePause();
             binding.btnPause.setText(presenter.isPaused() ? R.string.resume : R.string.pause);
@@ -302,7 +309,9 @@ public class BattleActivity extends BaseMvpActivity<ActivityBattleBinding, Battl
         finishDialogShown = true;
         String winnerName = winner == Team.BLUE ? getString(R.string.side_blue) : getString(R.string.side_red);
         String message = getString(R.string.battle_finish_message_format, durationMs / 1000);
-        if (recordId <= 0L) {
+        if (recordId > 0L) {
+            message = message + "\n\n" + getString(R.string.record_auto_saved_message, recordId);
+        } else {
             message = message + "\n\n" + getString(R.string.record_save_error);
         }
         AlertDialog.Builder builder = new AlertDialog.Builder(this)

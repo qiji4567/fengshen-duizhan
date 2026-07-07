@@ -99,7 +99,10 @@ public class BattleRepository {
         if (id <= 0L) {
             return id;
         }
-        attachReplayIfPossible(id, replayRecorder);
+        if (!attachReplayIfPossible(id, replayRecorder)) {
+            deleteRecordQuietly(id);
+            return -2L;
+        }
         return id;
     }
 
@@ -108,7 +111,10 @@ public class BattleRepository {
         if (id <= 0L) {
             return id;
         }
-        attachReplayJsonIfPossible(id, replayJson);
+        if (!attachReplayJsonIfPossible(id, replayJson)) {
+            deleteRecordQuietly(id);
+            return -2L;
+        }
         return id;
     }
 
@@ -136,20 +142,37 @@ public class BattleRepository {
         return -1L;
     }
 
-    private void attachReplayIfPossible(long recordId, ReplayRecorder replayRecorder) {
+    private boolean attachReplayIfPossible(long recordId, ReplayRecorder replayRecorder) {
         if (recordId <= 0L || replayRecorder == null || replayRecorder.frameCount() == 0) {
-            return;
+            Log.w(TAG, "Replay attach skipped for record " + recordId + ": no replay frames");
+            return false;
         }
+        boolean fileWritten;
         try {
-            attachReplayJsonIfPossible(recordId, replayRecorder.exportForPersistence());
+            fileWritten = ReplayStorage.writeReplayFile(appContext, recordId, replayRecorder);
+        } catch (OutOfMemoryError error) {
+            Log.e(TAG, "Replay streaming write ran out of memory for record " + recordId, error);
+            fileWritten = false;
         } catch (RuntimeException exception) {
-            Log.w(TAG, "Replay export failed for record " + recordId, exception);
+            Log.e(TAG, "Replay streaming write crashed for record " + recordId, exception);
+            fileWritten = false;
         }
+        if (!fileWritten) {
+            Log.e(TAG, "Replay file streaming write failed for record " + recordId);
+            return false;
+        }
+        boolean updated = updateReplayReference(recordId, ReplayStorage.FILE_PREFIX + recordId);
+        if (updated) {
+            Log.i(TAG, "Replay saved for record " + recordId
+                    + " (" + replayRecorder.frameCount() + " frames, file storage)");
+        }
+        return updated;
     }
 
-    private void attachReplayJsonIfPossible(long recordId, String replayJson) {
+    private boolean attachReplayJsonIfPossible(long recordId, String replayJson) {
         if (recordId <= 0L || replayJson == null || replayJson.length() == 0) {
-            return;
+            Log.w(TAG, "Replay attach skipped for record " + recordId + ": empty replay json");
+            return false;
         }
         try {
             byte[] gzipBytes = ReplayStorage.gzipUtf8(replayJson);
@@ -161,16 +184,30 @@ public class BattleRepository {
                 storageRef = ReplayStorage.FILE_PREFIX + recordId;
             } else {
                 Log.e(TAG, "Replay file write failed for record " + recordId);
-                return;
+                return false;
             }
-            ContentValues update = new ContentValues();
-            update.put("replay_json", storageRef);
-            openWritableDatabase().update("battle_record", update, "id=?", new String[]{String.valueOf(recordId)});
+            if (!updateReplayReference(recordId, storageRef)) {
+                return false;
+            }
             Log.i(TAG, "Replay saved for record " + recordId
                     + " (" + replayJson.length() + " chars, " + gzipBytes.length + " gzip bytes)");
+            return true;
         } catch (RuntimeException | IOException exception) {
             Log.w(TAG, "Replay attach failed for record " + recordId, exception);
+            return false;
         }
+    }
+
+    private boolean updateReplayReference(long recordId, String storageRef) {
+        ContentValues update = new ContentValues();
+        update.put("replay_json", storageRef);
+        int updated = openWritableDatabase().update("battle_record", update, "id=?",
+                new String[]{String.valueOf(recordId)});
+        if (updated <= 0) {
+            Log.e(TAG, "Replay database update missed record " + recordId);
+            return false;
+        }
+        return true;
     }
 
     private SQLiteDatabase openWritableDatabase() {
@@ -178,6 +215,18 @@ public class BattleRepository {
             throw new IllegalStateException("GameDbHelper unavailable");
         }
         return dbHelper.getWritableDatabase();
+    }
+
+    private void deleteRecordQuietly(long recordId) {
+        if (recordId <= 0L) {
+            return;
+        }
+        try {
+            openWritableDatabase().delete("battle_record", "id=?",
+                    new String[]{String.valueOf(recordId)});
+        } catch (RuntimeException exception) {
+            Log.w(TAG, "Failed to remove incomplete replay record " + recordId, exception);
+        }
     }
 
     private void sleepQuietly(long delayMs) {
@@ -227,8 +276,10 @@ public class BattleRepository {
             }
             BattleDetailPayload payload = new BattleDetailPayload();
             payload.record = record;
-            payload.replayData = ReplayData.fromJson(decodeReplayJson(record.replayJson));
-            payload.analyzer = ReplayAnalyzer.analyze(payload.replayData);
+            payload.replayFrameCount = ReplayStorage.countStoredFrames(appContext, record.replayJson);
+            payload.hasReplay = payload.replayFrameCount > 0;
+            payload.analyzer = new ReplayAnalyzer();
+            payload.analyzer.frameCount = payload.replayFrameCount;
             notifyResult(callback, payload);
         });
     }
